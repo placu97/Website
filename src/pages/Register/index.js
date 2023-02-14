@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import useForm from "hooks/useForm";
 
 const RegisterPage = () => {
-  const [apiData, setapiData] = React.useState();
+  const [apiData1, setapiData1] = React.useState();
   const formValidationSchema = yup
     .object()
     .shape({
@@ -29,12 +29,12 @@ const RegisterPage = () => {
   );
   const navigate = useNavigate();
 
-  function callApi(data) {
+  function callApi1(data) {
     const req = { data: { ...data, returnSecureToken: "true" } };
 
     postAccountsSignUp(req)
       .then((res) => {
-        setapiData(res);
+        setapiData1(res);
 
         localStorage.setItem("email", JSON.stringify(res?.email));
 
@@ -115,7 +115,7 @@ const RegisterPage = () => {
         <Button
           className="common-pointer cursor-pointer font-bold max-w-[1180px] sm:text-[40px] md:text-[46px] text-[50px] text-center text-white_A700 w-[100%] md:w-[90%] sm:w-[90%]"
           onClick={() => {
-            form.handleSubmit(callApi);
+            form.handleSubmit(callApi1);
           }}
           variant="GradientDeeppurple600Pink400_1"
         >

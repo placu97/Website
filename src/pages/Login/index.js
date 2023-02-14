@@ -1,8 +1,57 @@
 import React from "react";
 
 import { Text, Input, Img, Button } from "components";
+import * as yup from "yup";
+import { postAccountsSignInWithPassword } from "service/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import useForm from "hooks/useForm";
 
 const LoginPage = () => {
+  const [apiData, setapiData] = React.useState();
+  const formValidationSchema = yup
+    .object()
+    .shape({
+      email: yup
+        .string()
+        .required("Email is required")
+        .email("Please enter valid email"),
+      password: yup.string().required("Password is required"),
+    });
+  const form = useForm(
+    { email: "", password: "" },
+    {
+      validate: true,
+      validateSchema: formValidationSchema,
+      validationOnChange: true,
+    }
+  );
+  const navigate = useNavigate();
+
+  function callApi(data) {
+    const req = { data: { ...data, returnSecureToken: "true" } };
+
+    postAccountsSignInWithPassword(req)
+      .then((res) => {
+        setapiData(res);
+
+        localStorage.setItem("email", JSON.stringify(res?.email));
+
+        localStorage.setItem("userId", JSON.stringify(res?.localId));
+
+        localStorage.setItem("idToken", JSON.stringify(res?.idToken));
+
+        localStorage.setItem("refreshToken", JSON.stringify(res?.refreshToken));
+
+        navigate("/home1");
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error("Errore di accesso !");
+      });
+  }
+
   return (
     <>
       <div className="bg-gradient1  flex flex-col font-inter items-center justify-start mx-[auto] py-[79px] w-[100%]">
@@ -18,6 +67,11 @@ const LoginPage = () => {
             className="font-semibold p-[0] sm:text-[25px] md:text-[38px] text-[40px] placeholder:text-gray_500 text-gray_500 text-left w-[100%]"
             wrapClassName="flex w-[100%]"
             type="email"
+            onChange={(e) => {
+              form.handleChange("email", e.target.value);
+            }}
+            errors={form?.errors?.email}
+            value={form?.values?.email}
             name="input"
             placeholder="Inserisci la tua email"
             prefix={
@@ -41,6 +95,11 @@ const LoginPage = () => {
             className="font-semibold p-[0] sm:text-[25px] md:text-[38px] text-[40px] placeholder:text-gray_500 text-gray_500 text-left w-[100%]"
             wrapClassName="flex w-[100%]"
             type="password"
+            onChange={(e) => {
+              form.handleChange("password", e.target.value);
+            }}
+            errors={form?.errors?.password}
+            value={form?.values?.password}
             name="input One"
             placeholder="Password di almeno 6 caratteri"
             prefix={
@@ -48,10 +107,16 @@ const LoginPage = () => {
             }
           ></Input>
         </div>
-        <Button className="cursor-pointer font-bold max-w-[1180px] mb-[15px] mt-[132px] sm:p-[] sm:pb-[] sm:pl-[] sm:pr-[] sm:pt-[] sm:text-[40px] md:text-[46px] text-[50px] text-center text-white_A700 w-[100%] md:w-[90%] sm:w-[90%]">
+        <Button
+          className="common-pointer cursor-pointer font-bold max-w-[1180px] mb-[15px] mt-[132px] sm:p-[] sm:pb-[] sm:pl-[] sm:pr-[] sm:pt-[] sm:text-[40px] md:text-[46px] text-[50px] text-center text-white_A700 w-[100%] md:w-[90%] sm:w-[90%]"
+          onClick={() => {
+            form.handleSubmit(callApi);
+          }}
+        >
           Accedi
         </Button>
       </div>
+      <ToastContainer />
     </>
   );
 };
