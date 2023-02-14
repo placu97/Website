@@ -31,7 +31,7 @@ const RegisterPage = () => {
 
   function callApi1(data) {
     const req = { data: { ...data, returnSecureToken: "true" } };
-
+    console.log(req)
     postAccountsSignUp(req)
       .then((res) => {
         setapiData1(res);
