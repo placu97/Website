@@ -1,10 +1,11 @@
 import Axios from "axios";
+
 const defaultAxios = Axios.create({
-  headers: { "Content-type": "application/json" },
+  headers: {},
 });
 defaultAxios.interceptors.response.use(
   (res) => {
-    return res.data;
+    return res;
   },
   (err) => {
     return Promise.reject(err);

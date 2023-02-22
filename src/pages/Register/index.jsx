@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import useForm from "hooks/useForm";
 
 const RegisterPage = () => {
-  const [apiData1, setapiData1] = React.useState();
+  const [apiData3, setapiData3] = React.useState();
   const formValidationSchema = yup
     .object()
     .shape({
@@ -29,18 +29,24 @@ const RegisterPage = () => {
   );
   const navigate = useNavigate();
 
-  function callApi1(data) {
-    const req = { data: { ...data, returnSecureToken: "true" } };
+  function callApi3(data) {
+    const req = {
+      data: {
+        email: data?.email,
+        password: data?.password,
+        returnSecureToken: "true",
+      },
+    };
 
     postAccountsSignUp(req)
       .then((res) => {
-        setapiData1(res);
+        setapiData3(res?.data);
 
-        localStorage.setItem("email", JSON.stringify(res?.email));
+        localStorage.setItem("email", JSON.stringify(res?.data?.email));
 
-        localStorage.setItem("userId", JSON.stringify(res?.localId));
+        localStorage.setItem("userId", JSON.stringify(res?.data?.localId));
 
-        navigate("/home1");
+        navigate("/");
       })
       .catch((err) => {
         console.error(err);
@@ -50,18 +56,18 @@ const RegisterPage = () => {
 
   return (
     <>
-      <div className="bg-gradient1  flex flex-col font-inter md:gap-[40px] sm:gap-[40px] gap-[74px] items-center justify-end mx-[auto] py-[54px] w-[100%]">
-        <div className="flex flex-col gap-[10px] h-[446px] md:h-[auto] sm:h-[auto] items-center justify-start max-w-[1280px] mt-[87px] sm:px-[20px] px-[313px] md:px-[40px] py-[50px] w-[100%]">
+      <div className="bg-gradient1  flex flex-col font-inter sm:gap-[40px] md:gap-[40px] gap-[74px] items-center justify-end mx-[auto] py-[54px] w-[100%]">
+        <div className="flex flex-col gap-[10px] h-[446px] md:h-[auto] items-baseline justify-start max-w-[1280px] mt-[87px] sm:px-[20px] px-[313px] md:px-[40px] py-[50px] w-[100%]">
           <div className="flex flex-col gap-[10px] h-[100%] items-start justify-start px-[10px] py-[14px] w-[100%]">
             <Text
-              className="text-left text-white_A700 w-[auto]"
+              className="font-bold text-left text-white_A700 w-[auto]"
               as="h2"
               variant="h2"
             >
               Email
             </Text>
             <Input
-              className="font-medium p-[0] sm:text-[26px] md:text-[28px] text-[30px] placeholder:text-gray_500 text-gray_500 text-left w-[100%]"
+              className="bg-colors border-none font-inter font-medium opacity-op p-[0] sm:text-[26px] md:text-[28px] text-[30px] placeholder:text-gray_500 text-gray_500 text-left w-[100%]"
               wrapClassName="flex w-[100%]"
               type="email"
               onChange={(e) => {
@@ -74,7 +80,7 @@ const RegisterPage = () => {
               prefix={
                 <Img
                   src="images/img_mail.svg"
-                  className="mr-[10px] my-[auto]"
+                  className="my-[auto] mx-[10px]"
                   alt="mail"
                 />
               }
@@ -83,7 +89,7 @@ const RegisterPage = () => {
           </div>
           <div className="flex flex-col gap-[10px] h-[100%] items-start justify-start px-[10px] py-[14px] w-[100%]">
             <Text
-              className="text-left text-white_A700 w-[auto]"
+              className="font-bold text-left text-white_A700 w-[auto]"
               as="h2"
               variant="h2"
             >
@@ -103,21 +109,20 @@ const RegisterPage = () => {
               prefix={
                 <Img
                   src="images/img_lock.svg"
-                  className="mr-[10px] my-[auto]"
+                  className="my-[auto] mx-[10px]"
                   alt="lock"
                 />
               }
               shape="RoundedBorder30"
-              size="md"
+              size="lg"
             ></Input>
           </div>
         </div>
         <Button
-          className="common-pointer cursor-pointer font-bold max-w-[1180px] sm:text-[40px] md:text-[46px] text-[50px] text-center text-white_A700 w-[100%] md:w-[90%] sm:w-[90%]"
+          className="common-pointer cursor-pointer font-bold max-w-[1180px] sm:text-[40px] md:text-[46px] text-[50px] text-center text-white_A700 w-[100%] md:w-[90%]"
           onClick={() => {
-            form.handleSubmit(callApi1);
+            form.handleSubmit(callApi3);
           }}
-          variant="GradientDeeppurple600Pink400_1"
         >
           Registrati
         </Button>

@@ -1,10 +1,22 @@
 :root { 
---bluegray_900:#2c2b2b; 
+--blue_900:#0000e1; 
 --gray_500:#9d9d9d; 
+--gray_901:#0d0140; 
+--light_blue_200:#6dcbff; 
+--indigo_50:#e3e7eb; 
 --gray_900:#1d1d1d; 
 --bluegray_100:#d9d9d9; 
 --deep_purple_600:#5843ad; 
+--gray_50:#fcfcfc; 
+--bluegray_900:#2c2b2b; 
+--bluegray_900_b2:#2c2b2bb2; 
+--bluegray_401:#78828a; 
+--bluegray_400:#74839d; 
+--bluegray_300:#9ca4ab; 
+--red_A700:#ff0000; 
 --white_A700:#ffffff; 
 --pink_400:#d93570; 
+--bluegray_902:#1f2c37; 
+--bluegray_901:#262b35; 
 --purple_400:#b835d9; 
 }

@@ -4,6 +4,6 @@ import { Img } from "./Img";
 import { Line } from "./Line";
 import { List } from "./List";
 import { Text } from "./Text";
-import { Input } from "./Input";
 import { Button } from "./Button";
-export { Datepicker, FloatingButton, Img, Line, List, Text, Input, Button };
+import { Input } from "./Input";
+export { Datepicker, FloatingButton, Img, Line, List, Text, Button, Input };

@@ -61,22 +61,7 @@ const useForm = (initialValues = {}, config = { ...defaultConfig }) => {
   const [state, dispatch] = useReducer(reducer, initalState);
   const { validate, validationOnChange, validateSchema } = config;
 
-  React.useEffect(() => {
-    async function checkForm() {
-      await validateForm();
-    }
-    if (validationOnChange && state.isSubmitted) {
-      checkForm();
-    }
-  }, [state.values, validationOnChange]);
-
-  const validateForm = async () => {
-    const { isValid, errors } = await getValidationErrors();
-    dispatch({ type: "VALIDATE_FORM", payload: { errors } });
-    return isValid;
-  };
-
-  const getValidationErrors = () => {
+  const getValidationErrors = useCallback(() => {
     return new Promise((resolve, _) => {
       if (validateSchema) {
         try {
@@ -95,21 +80,35 @@ const useForm = (initialValues = {}, config = { ...defaultConfig }) => {
               set(errors, yupErr.path, [yupErr.message]);
             }
           });
-          console.log({ errors });
           resolve({ isValid: false, errors });
         }
       } else {
         resolve({ isValid: true, errors: {} });
       }
     });
-  };
+  }, [state, validateSchema]);
+
+  const validateForm = useCallback(async () => {
+    const { isValid, errors } = await getValidationErrors();
+    dispatch({ type: "VALIDATE_FORM", payload: { errors } });
+    return isValid;
+  }, [getValidationErrors]);
+
+  React.useEffect(() => {
+    async function checkForm() {
+      await validateForm();
+    }
+    if (validationOnChange && state.isSubmitted) {
+      checkForm();
+    }
+  }, [state.values, state.isSubmitted, validationOnChange]);
 
   const handleChange = useCallback(async (key, value) => {
     dispatch({
       type: "INPUT_CHANGE",
       payload: { key, value },
     });
-  });
+  }, []);
 
   const resetForm = useCallback(() => {
     dispatch({
@@ -122,16 +121,16 @@ const useForm = (initialValues = {}, config = { ...defaultConfig }) => {
 
   const clearForm = useCallback(() => {
     const oldValues = { ...state.values };
-    const values = Object.keys(oldValues).forEach(function (key) {
+    Object.keys(oldValues).forEach(function (key) {
       oldValues[key] = "";
     });
     dispatch({
       type: "CLEAR_FORM",
       payload: {
-        ...values,
+        ...oldValues,
       },
     });
-  });
+  }, [state.values]);
 
   const setValues = (values) => {
     dispatch({
@@ -142,16 +141,19 @@ const useForm = (initialValues = {}, config = { ...defaultConfig }) => {
     });
   };
 
-  const handleSubmit = useCallback(async (onSubmit) => {
-    if (validate) {
-      dispatch({ type: "SUBMIT_FORM" });
-      if (await validateForm()) {
+  const handleSubmit = useCallback(
+    async (onSubmit) => {
+      if (validate) {
+        dispatch({ type: "SUBMIT_FORM", payload: null });
+        if (await validateForm()) {
+          onSubmit(state.values);
+        }
+      } else {
         onSubmit(state.values);
       }
-    } else {
-      onSubmit(state.values);
-    }
-  });
+    },
+    [state.values, validate, validateForm]
+  );
 
   return {
     handleChange,

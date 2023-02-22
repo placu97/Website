@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import useForm from "hooks/useForm";
 
 const LoginPage = () => {
-  const [apiData, setapiData] = React.useState();
+  const [apiData2, setapiData2] = React.useState();
   const formValidationSchema = yup
     .object()
     .shape({
@@ -29,22 +29,31 @@ const LoginPage = () => {
   );
   const navigate = useNavigate();
 
-  function callApi(data) {
-    const req = { data: { ...data, returnSecureToken: "true" } };
+  function callApi2(data) {
+    const req = {
+      data: {
+        email: data?.email,
+        password: data?.password,
+        returnSecureToken: "true",
+      },
+    };
 
     postAccountsSignInWithPassword(req)
       .then((res) => {
-        setapiData(res);
+        setapiData2(res?.data);
 
-        localStorage.setItem("email", JSON.stringify(res?.email));
+        localStorage.setItem("email", JSON.stringify(res?.data?.email));
 
-        localStorage.setItem("userId", JSON.stringify(res?.localId));
+        localStorage.setItem("userId", JSON.stringify(res?.data?.localId));
 
-        localStorage.setItem("idToken", JSON.stringify(res?.idToken));
+        localStorage.setItem("idToken", JSON.stringify(res?.data?.idToken));
 
-        localStorage.setItem("refreshToken", JSON.stringify(res?.refreshToken));
+        localStorage.setItem(
+          "refreshToken",
+          JSON.stringify(res?.data?.refreshToken)
+        );
 
-        navigate("/home1");
+        navigate("/");
       })
       .catch((err) => {
         console.error(err);
@@ -77,7 +86,7 @@ const LoginPage = () => {
             prefix={
               <Img
                 src="images/img_mail.svg"
-                className="mr-[34px] my-[auto]"
+                className="ml-[35px] mr-[34px] my-[auto]"
                 alt="mail"
               />
             }
@@ -103,14 +112,18 @@ const LoginPage = () => {
             name="input One"
             placeholder="Password di almeno 6 caratteri"
             prefix={
-              <Img src="images/img_lock.svg" className="mr-[34px]" alt="lock" />
+              <Img
+                src="images/img_lock.svg"
+                className="ml-[35px] mr-[34px]"
+                alt="lock"
+              />
             }
           ></Input>
         </div>
         <Button
-          className="common-pointer cursor-pointer font-bold max-w-[1180px] mb-[15px] mt-[132px] sm:p-[] sm:pb-[] sm:pl-[] sm:pr-[] sm:pt-[] sm:text-[40px] md:text-[46px] text-[50px] text-center text-white_A700 w-[100%] md:w-[90%] sm:w-[90%]"
+          className="common-pointer cursor-pointer font-bold max-w-[1180px] mb-[15px] mt-[132px] sm:p-[] sm:pb-[] sm:pl-[] sm:pr-[] sm:pt-[] sm:text-[40px] md:text-[46px] text-[50px] text-center text-white_A700 w-[100%] md:w-[90%]"
           onClick={() => {
-            form.handleSubmit(callApi);
+            form.handleSubmit(callApi2);
           }}
         >
           Accedi

@@ -1,15 +1,20 @@
-import { ErrorMessage } from "../../components/ErrorMessage";
 import React from "react";
 import PropTypes from "prop-types";
+import { ErrorMessage } from "../../components/ErrorMessage";
 
-const variants = { FillWhiteA700: "bg-white_A700" };
+const variants = {
+  FillWhiteA700: "bg-white_A700",
+  OutlineIndigo50: "bg-white_A700 border-[1px] border-indigo_50 border-solid",
+};
 const shapes = {
-  RoundedBorder40: "rounded-radius40",
-  RoundedBorder30: "rounded-radius30",
+  RoundedBorder40: "rounded-[40px]",
+  RoundedBorder30: "rounded-[30px]",
+  RoundedBorder24: "rounded-[24px]",
 };
 const sizes = {
-  sm: "sm:pr-[20px] pr-[35px] py-[35px]",
-  md: "sm:pr-[20px] pr-[28px] py-[35px]",
+  sm: "pl-[11px] pr-[16px] py-[17px]",
+  md: "sm:pr-[20px] pr-[32px] py-[32px]",
+  lg: "pb-[31px] sm:pr-[20px] pr-[28px] pt-[35px]",
 };
 
 const Input = React.forwardRef(
@@ -35,9 +40,10 @@ const Input = React.forwardRef(
     return (
       <>
         <div
-          className={`${wrapClassName} ${shapes[shape] || ""} ${
-            variants[variant] || ""
-          } ${sizes[size] || ""}`}
+          className={`${wrapClassName} 
+              ${shapes[shape] || ""} 
+              ${variants[variant] || ""} 
+              ${sizes[size] || ""}`}
         >
           {!!label && label}
           {!!prefix && prefix}
@@ -63,10 +69,15 @@ Input.propTypes = {
   name: PropTypes.string,
   placeholder: PropTypes.string,
   type: PropTypes.string,
-  shape: PropTypes.oneOf(["RoundedBorder40", "RoundedBorder30"]),
-  variant: PropTypes.oneOf(["FillWhiteA700"]),
-  size: PropTypes.oneOf(["sm", "md"]),
+  shape: PropTypes.oneOf([
+    "RoundedBorder40",
+    "RoundedBorder30",
+    "RoundedBorder24",
+  ]),
+  variant: PropTypes.oneOf(["FillWhiteA700", "OutlineIndigo50"]),
+  size: PropTypes.oneOf(["sm", "md", "lg"]),
 };
+
 Input.defaultProps = {
   wrapClassName: "",
   className: "",
@@ -75,7 +86,7 @@ Input.defaultProps = {
   type: "text",
   shape: "RoundedBorder40",
   variant: "FillWhiteA700",
-  size: "sm",
+  size: "md",
 };
 
 export { Input };
